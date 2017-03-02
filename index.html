@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html ng-app="mcauthApp" ng-controller="mcauthController">
+<head>
+    <title>MCAuth - Authenticate & Link Users to their Minecraft account</title>
+    <link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>
+
+    <meta name="description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+    <meta name="keywords" content="minecraft,authentication,link,login,register">
+    <meta name="author" content="inventivetalent">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Minecraft Authentication">
+    <meta property="og:image" content="">
+    <meta property="og:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+
+    <meta property="twitter:title" content="Minecraft Authentication">
+    <meta property="twitter:image" content="">
+    <meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+    <meta property="twitter:creator" content="@Inventivtalent">
+    <meta property="twitter:card" content="summary">
+
+    <meta name="robots" content="index, follow">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+    <meta name=viewport content="width=device-width, initial-scale=1">
+
+    <base href="/">
+
+    <style>
+        .list-group-item-file {
+
+        }
+
+        .list-group-item-dir {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body ng-cloak>
+
+<div class="container-fluid">
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="/img/mcauth-256.png" class="img-responsive">
+                </div>
+                <div class="col-md-10">
+                    <h1>Minecraft Authentication</h1>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        Authenticate Users with their Minecraft Account<br/>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div ng-view></div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js" integrity="sha384-k+Qp/8rZxoiiYGVjOBiZwkEp5yv6clgl2EmwNaE1oUMlfmEYgCWazxf4CyxfZiWG" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+
+<script>
+    var authApp = angular.module("mcauthApp", ["ngRoute", "ngCookies"]);
+
+    authApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
+
+        $routeProvider
+                .when("/", {
+                    templateUrl: "/pages/index.html"
+                })
+                .when("/auth", {
+                    templateUrl: "/pages/auth.html",
+                    controller: "authController"
+                })
+
+
+        $locationProvider.html5Mode(false);
+
+        // Required for session cookies to be sent in $http
+        $httpProvider.defaults.withCredentials = true;
+    });
+
+    authApp.controller("mcauthController", ["$scope", function ($scope) {
+
+    }]);
+
+    authApp.controller("authController", ["$scope", "$http", "$cookies", "$timeout", "$interval", function ($scope, $http, $cookies, $timeout, $interval) {
+        $scope.auth = {
+            id: $cookies.get("mcauth_id"),
+            requestId: $cookies.get("mcauth_request_id"),
+            username: $cookies.get("mcauth_username"),
+            getId: function () {
+                return $scope.auth.id ? atob($scope.auth.id) : undefined
+            },
+            getRequestId: function () {
+                return $scope.auth.requestId ? atob($scope.auth.requestId) : undefined;
+            },
+            getUsername: function () {
+                return $scope.auth.username ? atob($scope.auth.username) : undefined;
+            },
+            request: {
+                status: "STARTED",
+                created: 0
+            },
+            expiration: {
+                duration: 0,
+                durationText: ""
+            },
+            checkInterval: undefined,
+            timerInterval: undefined,
+            enteredToken: ""
+        }
+
+        if ($scope.auth.id && $scope.auth.requestId && $scope.auth.username) {
+            $timeout(function () {
+                $http({
+                    url: "https://api.mcauth.ga/auth/api/check/" + $scope.auth.getId()
+                }).then(function (response) {
+                    console.log(response);
+                    $scope.auth.request.status = response.data.status;
+                    $scope.auth.request.created = response.data.created;
+                    console.log("Status: " + $scope.auth.request.status)
+
+                    if ($scope.auth.checkInterval) {
+                        $scope.auth.checkInterval.cancel();
+                    }
+                    $scope.auth.checkInterval = $interval(function () {
+                        $http({
+                            url: "https://api.mcauth.ga/auth/api/check/" + $scope.auth.getId()
+                        }).then(function (response) {
+                            console.log(response);
+                            $scope.auth.request.status = response.data.status;
+                            console.log("Status: " + $scope.auth.request.status)
+
+                            if ($scope.auth.request.status === 'TIMEOUT_LOGIN' || $scope.auth.request.status === 'TIMEOUT_TOKEN' || $scope.auth.request.status === 'VERIFIED' || $scope.auth.request.status === 'FAILED') {
+                                clearInterval($scope.auth.checkInterval);
+                                clearInterval($scope.auth.timerInterval);
+                            }
+
+                            if ($scope.auth.request.status == 'VERIFIED') {
+                                $timeout(function () {
+                                    window.location = "https://api.mcauth.ga/auth/finish/" + $scope.auth.getId()
+                                }, 1000);
+                            }
+                        }, function (response) {
+                            //TODO
+                        });
+                    }, 2000);
+
+
+                    if ($scope.auth.timerInterval) {
+                        $scope.auth.timerInterval.cancel();
+                    }
+                    $scope.auth.timerInterval = $interval(function () {
+                        $scope.auth.expiration.duration = moment.duration(moment($scope.auth.request.created * 1000).add(5, "minutes") - moment());
+                        $scope.auth.expiration.durationText = moment($scope.auth.expiration.duration.asMilliseconds()).format("mm:ss");
+                    }, 1000);
+                });
+            }, 500);
+        }
+
+        $scope.submitToken = function () {
+            if ($scope.auth.enteredToken.length !== 6) {
+                return;
+            }
+
+            $http({
+                url: "https://api.mcauth.ga/auth/api/verify/" + $scope.auth.getId() + "?token=" + $scope.auth.enteredToken,
+            }).then(function (response) {
+                console.log(response);
+                $timeout(function () {
+                    $scope.auth.request.status = response.data.status;
+                }, 500);
+            });
+
+        };
+    }]);
+
+
+</script>
+</body>
+</html>

@@ -125,8 +125,8 @@
             enteredToken: ""
         }
 
-        if ($scope.auth.id && $scope.auth.requestId && $scope.auth.username) {
-            $timeout(function () {
+        $timeout(function () {
+            if ($scope.auth.id && $scope.auth.requestId && $scope.auth.username) {
                 $http({
                     url: "https://api.mcauth.ga/auth/api/check/" + $scope.auth.getId()
                 }).then(function (response) {
@@ -156,7 +156,8 @@
                                     window.location = "https://api.mcauth.ga/auth/finish/" + $scope.auth.getId()
                                 }, 1000);
                             }
-                        }, function (response) {
+                        }, function (error) {
+                            console.warn(error)
                             //TODO
                         });
                     }, 2000);
@@ -169,9 +170,16 @@
                         $scope.auth.expiration.duration = moment.duration(moment($scope.auth.request.created * 1000).add(5, "minutes") - moment());
                         $scope.auth.expiration.durationText = moment($scope.auth.expiration.duration.asMilliseconds()).format("mm:ss");
                     }, 1000);
+                }, function (error) {
+                    console.warn(error);
+                    if (error.status == 404) {
+                        $scope.auth.request.status = "NOT_FOUND";
+                    }
                 });
-            }, 500);
-        }
+            } else {
+                $scope.auth.request.status = "NOT_FOUND";
+            }
+        }, 500);
 
         $scope.submitToken = function () {
             if ($scope.auth.enteredToken.length !== 6) {

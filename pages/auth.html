@@ -33,7 +33,7 @@
                 <img src="/img/loading-ring-dark-blue.svg" class="img-responsive" ng-if="auth.request.status == 'REQUESTED'">
                 <img src="/img/loading-ring-green.svg" class="img-responsive" ng-if="auth.request.status == 'TOKEN_GENERATED' || auth.request.status == 'VERIFIED'">
                 <img src="/img/loading-ring-orange.svg" class="img-responsive" ng-if="auth.request.status == 'TIMEOUT_LOGIN' || auth.request.status == 'TIMEOUT_TOKEN'">
-                <img src="/img/loading-ring-red.svg" class="img-responsive" ng-if="auth.request.status == 'NOT_FOUND' || auth.request.status == 'FAILED'">
+                <img src="/img/loading-ring-red.svg" class="img-responsive" ng-if="auth.request.status == 'NOT_FOUND' || auth.request.status == 'FAILED' || auth.request.status == 'INVALID_TOKEN'">
             </div>
             <div class="text-center" style="font-size: 22px;">
                 <span ng-if="auth.request.status == 'STARTED'">Loading...</span>
@@ -52,7 +52,8 @@
                 </div>
 
                 <span ng-if="auth.request.status == 'VERIFIED'"><strong>Account verified!</strong></span>
-                <span ng-if="auth.request.status == 'VERIFIED'">Redirecting back...</span>
+                <span ng-if="auth.request.status == 'INVALID_TOKEN'">The token you entered was invalid</span>
+                <span ng-if="auth.request.status == 'VERIFIED' || auth.request.status == 'INVALID_TOKEN'"><br/>Redirecting back...</span>
 
                 <span ng-if="auth.request.status == 'TIMEOUT_LOGIN'">Your login timed out. Please try again</span>
                 <span ng-if="auth.request.status == 'TIMEOUT_TOKEN'">Your token expired. Please try again</span>

@@ -163,15 +163,13 @@
                             $scope.auth.request.status = response.data.status;
                             console.log("Status: " + $scope.auth.request.status)
 
-                            if ($scope.auth.request.status === 'TIMEOUT_LOGIN' || $scope.auth.request.status === 'TIMEOUT_TOKEN' || $scope.auth.request.status === 'VERIFIED' || $scope.auth.request.status === 'FAILED') {
+                            if ($scope.auth.request.status === 'TIMEOUT_LOGIN' || $scope.auth.request.status === 'TIMEOUT_TOKEN' || $scope.auth.request.status === 'VERIFIED' || $scope.auth.request.status === 'INVALID_TOKEN' || $scope.auth.request.status === 'FAILED') {
                                 clearInterval($scope.auth.checkInterval);
                                 clearInterval($scope.auth.timerInterval);
-                            }
 
-                            if ($scope.auth.request.status == 'VERIFIED') {
                                 $timeout(function () {
                                     window.location = "https://api.mcauth.ga/auth/finish/" + $scope.auth.getId()
-                                }, 1000);
+                                }, 2000);
                             }
                         }, function (error) {
                             console.warn(error)

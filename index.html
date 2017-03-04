@@ -28,10 +28,10 @@
 
     <base href="/">
 
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
     <script>
-        window.addEventListener("load", function(){
+        window.addEventListener("load", function () {
             window.cookieconsent.initialise({
                 "palette": {
                     "popup": {
@@ -43,7 +43,8 @@
                     }
                 },
                 "position": "bottom-right"
-            })});
+            })
+        });
     </script>
 </head>
 <body ng-cloak>
@@ -110,6 +111,13 @@
                 .when("/auth", {
                     templateUrl: "/pages/auth.html",
                     controller: "authController"
+                })
+                .when("/demo/:returnValues?", {
+                    templateUrl: "/pages/demo.html",
+                    controller: "demoController"
+                })
+                .when("/documentation", {
+                    templateUrl: "/pages/documentation.html"
                 })
 
 
@@ -221,7 +229,19 @@
         };
     }]);
 
+    authApp.controller("demoController", ["$scope", "$routeParams", "$location", function ($scope, $routeParams, $location) {
+        console.log($routeParams);
+        console.log($routeParams.returnValues)
+        $scope.iframeSrc = "https://mcauth.ga/_demo/index.php";
+        if ($routeParams.returnValues) {
+            var split = $routeParams.returnValues.split(",");
+            var id = split[0];
+            var requestId = split[1];
+            var code = split[2];
 
+            $scope.iframeSrc = "https://mcauth.ga/_demo/index.php?id=" + id + "&request_id=" + requestId + "&code=" + code;
+        }
+    }]);
 </script>
 </body>
 </html>

@@ -28,6 +28,10 @@
     input {
         width: 25%;
     }
+
+    .panel {
+        box-shadow: none !important;
+    }
 </style>
 <body>
 <div class="container-fluid">
@@ -117,34 +121,42 @@
         </fieldset>
 
         <br/>
-        <br/>
-       <fieldset>
-           <legend>Private Request Fields</legend>
-           <div style="font-size: 16px;">
-               <strong>Please note that the request secret should NEVER be visible to the user!</strong>
-               <br/>
-               All of these fields are only visible for demonstration purposes, so you can check the returned values after the authentication.
-           </div>
-           <br/>
-           <div class="form-group">
-               <label for="identifier">request_id</label>
-               <input type="text" name="request_id" class="form-control" readonly value="<?php echo hash("sha1", microtime(true) . rand()); ?>">
-           </div>
-           <div class="form-group">
-               <label for="secret">request_secret</label>
-               <input type="text" name="request_secret" class="form-control" readonly value="<?php echo $requestSecret; ?>">
-           </div>
-           <br/>
-           <div class="form-group">
-               <label for="url">request_callback</label>
-               <input type="url" name="request_callback" class="form-control" readonly value="https://mcauth.ga/_demo/return.php">
-           </div>
-           <div class="form-group">
-               <label for="ip">request_ip</label>
-               <input type="text" name="request_ip" class="form-control" readonly value="<?php echo getIp(); ?>"
-               <small class="form-text"><strong>Note: </strong>MCAuth relies on the requesting IP to be the same for every step, including the connection to the Minecraft server</small>
-           </div>
-       </fieldset>
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button type="button" class="btn btn-default btn-xs spoiler-trigger" data-toggle="collapse">Toggle Hidden Fields</button>
+                </div>
+                <div class="panel-collapse collapse out">
+                    <fieldset>
+                        <legend>Private Request Fields</legend>
+                        <div style="font-size: 16px;">
+                            <strong>Please note that the request secret should NEVER be visible to the user!</strong>
+                            <br/>
+                            All of these fields are only visible for demonstration purposes, so you can check the returned values after the authentication.
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label for="identifier">request_id</label>
+                            <input type="text" name="request_id" class="form-control" readonly value="<?php echo hash("sha1", microtime(true) . rand()); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="secret">request_secret</label>
+                            <input type="text" name="request_secret" class="form-control" readonly value="<?php echo $requestSecret; ?>">
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label for="url">request_callback</label>
+                            <input type="url" name="request_callback" class="form-control" readonly value="https://mcauth.ga/_demo/return.php">
+                        </div>
+                        <div class="form-group">
+                            <label for="ip">request_ip</label>
+                            <input type="text" name="request_ip" class="form-control" readonly value="<?php echo getIp(); ?>"
+                            <small class="form-text"><strong>Note: </strong>MCAuth relies on the requesting IP to be the same for every step, including the connection to the Minecraft server</small>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
 
         <br/>
         <br/>
@@ -155,6 +167,11 @@
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+    $(".spoiler-trigger").click(function () {
+        $(this).parent().next().collapse('toggle');
+    });
+</script>
 </body>
 </html>
 <?php
@@ -170,3 +187,4 @@ function getIp()
 
     return $_SERVER['REMOTE_ADDR'];
 }
+

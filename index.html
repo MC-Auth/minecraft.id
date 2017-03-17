@@ -50,7 +50,7 @@
 <body ng-cloak>
 
 <div class="container-fluid">
-    <div class="jumbotron">
+    <div class="jumbotron" ng-hide="auth.isUserOnAuthPage() && auth.style === 'simple'">
         <div class="container">
             <div class="row">
                 <div class="col-md-2">
@@ -72,10 +72,13 @@
     </div>
     <div class="container" style="padding-bottom: 100px;">
         <div ng-view></div>
+        <div ng-show="auth.isUserOnAuthPage() && auth.style === 'simple'">
+            <span class="text-muted">MCAuth by <a href="https://inventivetalent.org/?utm_source=mcassets&utm_medium=author_link" target="_blank">inventivetalent</a></span>
+        </div>
     </div>
 </div>
 
-<footer class="footer navbar-fixed-bottom" style="background-color: #f5f5f5; padding-top: 16px; padding-bottom: 16px;">
+<footer class="footer navbar-fixed-bottom" style="background-color: #f5f5f5; padding-top: 16px; padding-bottom: 16px;" ng-hide="auth.isUserOnAuthPage() && auth.style === 'simple'">
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
@@ -91,6 +94,7 @@
         </div>
     </div>
 </footer>
+
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -127,15 +131,12 @@
         $httpProvider.defaults.withCredentials = true;
     });
 
-    authApp.controller("mcauthController", ["$scope", function ($scope) {
-
-    }]);
-
-    authApp.controller("authController", ["$scope", "$http", "$cookies", "$timeout", "$interval", function ($scope, $http, $cookies, $timeout, $interval) {
+    authApp.controller("mcauthController", ["$scope", "$route", "$cookies", "$location", function ($scope, $route, $cookies, $location) {
         $scope.auth = {
             id: $cookies.get("mcauth_id"),
             requestId: $cookies.get("mcauth_request_id"),
             username: $cookies.get("mcauth_username"),
+            style: $cookies.get("mcauth_style"),
             getId: function () {
                 return $scope.auth.id ? atob($scope.auth.id) : undefined
             },
@@ -144,6 +145,9 @@
             },
             getUsername: function () {
                 return $scope.auth.username ? atob($scope.auth.username) : undefined;
+            },
+            isUserOnAuthPage:function(){
+                return $location.path() === "/auth";
             },
             request: {
                 status: "STARTED",
@@ -156,8 +160,12 @@
             checkInterval: undefined,
             timerInterval: undefined,
             enteredToken: ""
-        }
+        };
 
+        console.log($location.path())
+    }]);
+
+    authApp.controller("authController", ["$scope", "$http", "$cookies", "$timeout", "$interval", function ($scope, $http, $cookies, $timeout, $interval) {
         $timeout(function () {
             if ($scope.auth.id && $scope.auth.requestId && $scope.auth.username) {
                 $http({

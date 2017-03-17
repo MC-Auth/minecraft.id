@@ -102,10 +102,19 @@
     ?>
     </pre>
         <br/>
-        <a class="btn btn-primary" href="<?php echo $redirectUrl; ?>" target="_parent">Continue authentication on mcauth.ga &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-
         <?php
-    } else {
+        if (!isset($json["error"])) {
+            ?>
+            <a class="btn btn-primary" href="<?php echo $redirectUrl; ?>" target="_parent">Continue authentication on mcauth.ga &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+            <?php
+        } else {
+            ?>
+            <strong>Start Request not Successful</strong>
+
+            <?php
+        }
+    }
+    else {
     $requestSecret = hash("sha256", microtime(true) . rand() . $_SERVER["HTTP_REMOTE_IP"] . $_SERVER["HTTP_REFERER"]);
     $_SESSION["requestSecret"] = $requestSecret;
 

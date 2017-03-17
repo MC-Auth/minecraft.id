@@ -92,7 +92,7 @@
         $json = json_decode($result, true);
         curl_close($ch);
 
-        $redirectUrl = "https://api.mcauth.ga/auth/authorize/" . $json["id"] . "?request_id=" . $_POST["request_id"] . "&username=" . $_POST["username"];
+        $redirectUrl = "https://api.mcauth.ga/auth/authorize/" . $json["id"] . "?request_id=" . $_POST["request_id"] . "&username=" . $_POST["username"] . "&style=" . $_POST["style"];
 
         ?>
         Start result:
@@ -117,6 +117,14 @@
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="style">Style</label>
+                <select class="form-control" name="style" id="style">
+                    <option value="default">Default</option>
+                    <option value="simple">Simple</option>
+                </select>
             </div>
         </fieldset>
 

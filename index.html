@@ -96,6 +96,21 @@
 </footer>
 
 
+<div id="authModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <iframe id="authModalIframe" src="" style="width: 100%; height: 1000px; border-style: none; padding: 10px;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/" crossorigin="anonymous"></script>
@@ -116,12 +131,12 @@
                     templateUrl: "/pages/auth.html",
                     controller: "authController"
                 })
+                .when("/documentation", {
+                    templateUrl: "/pages/documentation.html"
+                })
                 .when("/demo/:returnValues?", {
                     templateUrl: "/pages/demo.html",
                     controller: "demoController"
-                })
-                .when("/documentation", {
-                    templateUrl: "/pages/documentation.html"
                 })
 
 
@@ -131,7 +146,9 @@
         $httpProvider.defaults.withCredentials = true;
     });
 
-    authApp.controller("mcauthController", ["$scope", "$route", "$cookies", "$location", function ($scope, $route, $cookies, $location) {
+    authApp.controller("mcauthController", ["$scope", "$route", "$cookies", "$location", "$http", function ($scope, $route, $cookies, $location, $http) {
+        console.info("mcauthController");
+        console.log($location.path())
         $scope.auth = {
             id: $cookies.get("mcauth_id"),
             requestId: $cookies.get("mcauth_request_id"),
@@ -146,7 +163,7 @@
             getUsername: function () {
                 return $scope.auth.username ? atob($scope.auth.username) : undefined;
             },
-            isUserOnAuthPage:function(){
+            isUserOnAuthPage: function () {
                 return $location.path() === "/auth";
             },
             request: {
@@ -162,10 +179,34 @@
             enteredToken: ""
         };
 
-        console.log($location.path())
+        if (!$scope.auth.isUserOnAuthPage() && $scope.auth.id) {
+            $http({
+                url: "https://api.mcauth.ga/auth/api/check/" + $scope.auth.getId()
+            }).then(function (response) {
+                console.log(response);
+                $scope.auth.request.status = response.data.status;
+                $scope.auth.request.created = response.data.created;
+                console.log("Status: " + $scope.auth.request.status)
+
+                if ($scope.auth.request.status === "REQUESTED") {
+                    $("#authModalIframe").attr("src", "https://api.mcauth.ga/auth/authorize/" + $scope.auth.getId() + "?request_id=" + $scope.auth.getRequestId() + "&username=" + $scope.auth.getUsername() + "&style=simple");
+                    $("#authModal").modal("show");
+                    $('#authModalIframe').on('hidden.bs.modal', function () {
+                        $("#authModalIframe").attr("src", "");
+                    })
+                }
+            }, function (error) {
+                console.warn(error);
+                if (error.status == 404) {
+                    $scope.auth.request.status = "NOT_FOUND";
+                }
+            });
+        }
     }]);
 
-    authApp.controller("authController", ["$scope", "$http", "$cookies", "$timeout", "$interval", function ($scope, $http, $cookies, $timeout, $interval) {
+    authApp.controller("authController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
+        console.info("authController");
+//        console.log($location.path())
         $timeout(function () {
             if ($scope.auth.id && $scope.auth.requestId && $scope.auth.username) {
                 $http({
@@ -238,8 +279,10 @@
     }]);
 
     authApp.controller("demoController", ["$scope", "$routeParams", "$location", function ($scope, $routeParams, $location) {
-        console.log($routeParams);
-        console.log($routeParams.returnValues)
+        console.info("demoController");
+//        console.log($location.path())
+//        console.log($routeParams);
+//        console.log($routeParams.returnValues)
         $scope.iframeSrc = "https://mcauth.ga/_demo/index.php";
         if ($routeParams.returnValues) {
             var split = $routeParams.returnValues.split(",");

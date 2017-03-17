@@ -61,7 +61,22 @@
         $json = json_decode($result, true);
         curl_close($ch);
 
+        if ($json["status"] === "VERIFIED") {
+            ?>
+            <p style="font-size:20px; font-weight: bold; color: green;">
+            <?php
+        } else {
+            ?>
+            <p style="font-size:20px; color: red;">
+            <?php
+        }
+
+        echo $json["status"];
+
         ?>
+        </p>
+
+        <br/>
         Status result:
         <pre>
     <?php

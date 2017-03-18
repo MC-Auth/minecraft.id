@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html ng-app="mcauthApp" ng-controller="mcauthController">
 <head>
-    <title>MCAuth - Authenticate & Link Users to their Minecraft account</title>
+    <title ng-bind="head.pageTitle">MCAuth - Authenticate & Link Users to their Minecraft account</title>
+    <update-title content="{{head.pageTitle}}"></update-title>
     <link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>
 
     <meta name="description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
@@ -10,10 +11,12 @@
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Minecraft Authentication">
+    <update-meta property="og:title" content="{{head.seoTitle}}"></update-meta>
     <meta property="og:image" content="">
     <meta property="og:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
 
     <meta property="twitter:title" content="Minecraft Authentication">
+    <update-meta property="twitter:title" content="{{head.seoTitle}}"></update-meta>
     <meta property="twitter:image" content="">
     <meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
     <meta property="twitter:creator" content="@Inventivtalent">
@@ -54,10 +57,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-2">
-                    <a href="https://mcauth.ga"><img src="/img/mcauth-256.png" class="img-responsive"></a>
+                    <a href="https://mcauth.ga"><img src="/img/mcauth-256.png" class="img-responsive" onclick="window.location='/'"></a>
                 </div>
                 <div class="col-md-10">
-                    <h1>Minecraft Authentication</h1>
+                    <h1 onclick="window.location='/'">Minecraft Authentication</h1>
                 </div>
             </div>
             <br/>
@@ -118,6 +121,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
 
+<script src="/js/update-meta.min.js"></script>
+
 <script>
     var authApp = angular.module("mcauthApp", ["ngRoute", "ngCookies"]);
 
@@ -132,10 +137,12 @@
                     controller: "authController"
                 })
                 .when("/documentation", {
-                    templateUrl: "/pages/documentation.html"
+                    templateUrl: "/pages/documentation.html",
+                    controller: "documentationController"
                 })
                 .when("/howto", {
-                    templateUrl: "/pages/howto.html"
+                    templateUrl: "/pages/howto.html",
+                    controller: "howtoController"
                 })
                 .when("/demo/:returnValues?", {
                     templateUrl: "/pages/demo.html",
@@ -152,6 +159,12 @@
     authApp.controller("mcauthController", ["$scope", "$route", "$cookies", "$location", "$http", function ($scope, $route, $cookies, $location, $http) {
         console.info("mcauthController");
         console.log($location.path())
+
+        $scope.head = {
+            pageTitle: "MCAuth - Authenticate & Link Users to their Minecraft account",
+            seoTitle: "Minecraft Authentication"
+        };
+
         $scope.auth = {
             id: $cookies.get("mcauth_id"),
             requestId: $cookies.get("mcauth_request_id"),
@@ -282,6 +295,9 @@
     }]);
 
     authApp.controller("demoController", ["$scope", "$routeParams", "$location", function ($scope, $routeParams, $location) {
+        $scope.head.pageTitle = "Demo - MCAuth";
+        $scope.head.seoTitle = "Demo - MCAuth";
+
         console.info("demoController");
 //        console.log($location.path())
 //        console.log($routeParams);
@@ -295,6 +311,16 @@
 
             $scope.iframeSrc = "https://mcauth.ga/_demo/index.php?id=" + id + "&request_id=" + requestId + "&code=" + code;
         }
+    }]);
+
+    authApp.controller("howtoController", ["$scope", function ($scope) {
+        $scope.head.pageTitle = "How To - MCAuth";
+        $scope.head.seoTitle = "How To - MCAuth";
+    }]);
+
+    authApp.controller("documentationController", ["$scope", function ($scope) {
+        $scope.head.pageTitle = "Documentation - MCAuth";
+        $scope.head.seoTitle = "Documentation - MCAuth";
     }]);
 </script>
 </body>

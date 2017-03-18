@@ -213,20 +213,22 @@
                 console.log("Status: " + $scope.auth.request.status)
 
                 if ($scope.auth.request.status === "REQUESTED") {
-                    $("#authModalIframe").attr("src", "https://api.mcauth.ga/auth/authorize/" + $scope.auth.getId() + "?request_id=" + $scope.auth.getRequestId() + "&username=" + $scope.auth.getUsername() + "&style=simple");
-                    $("#authModalIframe").on("load", function () {
+                    var iframe = $("#authModalIframe");
+                    var modal = $("#authModal");
+                    iframe.attr("src", "https://api.mcauth.ga/auth/authorize/" + $scope.auth.getId() + "?request_id=" + $scope.auth.getRequestId() + "&username=" + $scope.auth.getUsername() + "&style=simple");
+                    iframe.on("load", function () {
                         var iframeResizeInterval = $interval(function () {
-                            if ($("#authModalIframe").attr("src").length == 0) {
+                            if (iframe.attr("src").length == 0) {
                                 $interval.cancel(iframeResizeInterval);
                             } else {
-                                $("#authModalIframe").css("height", document.getElementById("authModalIframe").contentWindow.document.body.scrollHeight + 20);
+                                iframe.css("height", document.getElementById("authModalIframe").contentWindow.document.body.scrollHeight + 20);
                             }
                         }, 500);
                     });
-                    $("#authModal").modal("show");
-                    $('#authModal').on('hidden.bs.modal', function () {
+                    modal.modal("show");
+                    modal.on('hidden.bs.modal', function () {
                         console.log("modal closed")
-                        $("#authModalIframe").attr("src", "");
+                        iframe.attr("src", "");
                     })
                 }
             }, function (error) {

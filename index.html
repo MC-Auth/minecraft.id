@@ -107,7 +107,7 @@
             </div>
 
             <div class="modal-body">
-                <iframe id="authModalIframe" src="" style="width: 100%; height: 1000px; border-style: none; padding: 10px;">
+                <iframe id="authModalIframe" src="" style="width: 100%; min-height: 200px; border-style: none; padding: 10px;">
                 </iframe>
             </div>
         </div>
@@ -156,7 +156,7 @@
         $httpProvider.defaults.withCredentials = true;
     });
 
-    authApp.controller("mcauthController", ["$scope", "$route", "$cookies", "$location", "$http", function ($scope, $route, $cookies, $location, $http) {
+    authApp.controller("mcauthController", ["$scope", "$route", "$cookies", "$location", "$http", "$interval", function ($scope, $route, $cookies, $location, $http, $interval) {
         console.info("mcauthController");
         console.log($location.path())
 
@@ -206,8 +206,18 @@
 
                 if ($scope.auth.request.status === "REQUESTED") {
                     $("#authModalIframe").attr("src", "https://api.mcauth.ga/auth/authorize/" + $scope.auth.getId() + "?request_id=" + $scope.auth.getRequestId() + "&username=" + $scope.auth.getUsername() + "&style=simple");
+                    $("#authModalIframe").on("load", function () {
+                        var iframeResizeInterval = $interval(function () {
+                            if ($("#authModalIframe").attr("src").length == 0) {
+                                $interval.cancel(iframeResizeInterval);
+                            } else {
+                                $("#authModalIframe").css("height", document.getElementById("authModalIframe").contentWindow.document.body.scrollHeight + 20);
+                            }
+                        }, 500);
+                    });
                     $("#authModal").modal("show");
-                    $('#authModalIframe').on('hidden.bs.modal', function () {
+                    $('#authModal').on('hidden.bs.modal', function () {
+                        console.log("modal closed")
                         $("#authModalIframe").attr("src", "");
                     })
                 }
@@ -234,7 +244,7 @@
                     console.log("Status: " + $scope.auth.request.status)
 
                     if ($scope.auth.checkInterval) {
-                        $scope.auth.checkInterval.cancel();
+                        $interval.cancel($scope.auth.checkInterval);
                     }
                     $scope.auth.checkInterval = $interval(function () {
                         $http({
@@ -245,12 +255,11 @@
                             console.log("Status: " + $scope.auth.request.status)
 
                             if ($scope.auth.request.status === 'TIMEOUT_LOGIN' || $scope.auth.request.status === 'TIMEOUT_TOKEN' || $scope.auth.request.status === 'VERIFIED' || $scope.auth.request.status === 'INVALID_TOKEN' || $scope.auth.request.status === 'FAILED') {
-                                clearInterval($scope.auth.checkInterval);
-                                clearInterval($scope.auth.timerInterval);
-
                                 $timeout(function () {
                                     window.location = "https://api.mcauth.ga/auth/finish/" + $scope.auth.getId()
                                 }, 2000);
+                                $interval.cancel($scope.auth.checkInterval);
+                                $interval.cancel($scope.auth.timerInterval);
                             }
                         }, function (error) {
                             console.warn(error)
@@ -260,7 +269,7 @@
 
 
                     if ($scope.auth.timerInterval) {
-                        $scope.auth.timerInterval.cancel();
+                        $interval.cancel($scope.auth.timerInterval);
                     }
                     $scope.auth.timerInterval = $interval(function () {
                         $scope.auth.expiration.duration = moment.duration(moment($scope.auth.request.created * 1000).add(5, "minutes") - moment());

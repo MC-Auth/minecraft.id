@@ -43,6 +43,9 @@
                 <span ng-if="auth.request.status == 'TOKEN_GENERATED'">Please enter the token below</span>
 
                 <span ng-if="(auth.request.status == 'REQUESTED' || auth.request.status == 'TOKEN_GENERATED') && auth.expiration.duration > 0"><br/>Request expires in <span ng-class="{'countdown-warning':auth.expiration.duration.asSeconds()<=60,'countdown-danger':auth.expiration.duration.asSeconds()<=30}">{{auth.expiration.durationText}}</span></span>
+                <div style="font-size: 16px;" ng-if="(auth.request.status == 'REQUESTED' || auth.request.status == 'TOKEN_GENERATED') && auth.expiration.duration > 0">
+                    <button class="btn-primary" ng-hide="auth.isUserOnAuthPage() && auth.style === 'simple'" onclick="window.open('/howto','_blank')" title="Need help?"><i class="fa fa-question" aria-hidden="true"></i> Help</button>
+                </div>
 
                 <div ng-if="auth.request.status == 'TOKEN_GENERATED'" style="margin: 0 auto; width: 200px">
                     <form>

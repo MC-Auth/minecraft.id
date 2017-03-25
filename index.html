@@ -248,6 +248,10 @@
     }]);
 
     authApp.controller("authController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
+        $scope.head.pageTitle = "Authentication - MCAuth";
+        $scope.head.seoTitle = "Authentication - MCAuth";
+
+
         console.info("authController");
 //        console.log($location.path())
         $timeout(function () {
@@ -291,6 +295,16 @@
                     $scope.auth.timerInterval = $interval(function () {
                         $scope.auth.expiration.duration = moment.duration(moment($scope.auth.request.created * 1000).add(5, "minutes") - moment());
                         $scope.auth.expiration.durationText = moment($scope.auth.expiration.duration.asMilliseconds()).format("mm:ss");
+
+                        if ($scope.auth.request.status === "STARTED" || $scope.auth.request.status === "REQUESTED") {
+                            $scope.head.pageTitle = "Join Minecraft | " + $scope.auth.expiration.durationText + " | Authentication - MCAuth";
+                        } else if ($scope.auth.request.status === "TOKEN_GENERATED") {
+                            $scope.head.pageTitle = "Enter Token | " + $scope.auth.expiration.durationText + " | Authentication - MCAuth";
+                        } else if ($scope.auth.request.status === "VERIFIED" || $scope.auth.request.status === "INVALID_TOKEN") {
+                            $scope.head.pageTitle = "Redirecting... | Authentication - MCAuth";
+                        } else {
+                            $scope.head.pageTitle = "Authentication - MCAuth";
+                        }
                     }, 1000);
                 }, function (error) {
                     console.warn(error);

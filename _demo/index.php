@@ -140,7 +140,7 @@
             <legend>Public Request Fields</legend>
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Username" minlength="4" maxlength="16" required>
             </div>
             <br/>
             <div class="form-group">

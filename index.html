@@ -291,7 +291,7 @@
                     if ($scope.auth.checkInterval) {
                         $interval.cancel($scope.auth.checkInterval);
                     }
-                    $scope.auth.checkInterval = $interval($scope.refreshStatus, 2000);
+                    $scope.auth.checkInterval = $interval($scope.refreshStatus, 4000);
 
                     if ($scope.auth.timerInterval) {
                         $interval.cancel($scope.auth.timerInterval);

@@ -276,6 +276,8 @@
             });
         };
 
+        $(window).on("focus", $scope.refreshStatus);
+
         $timeout(function () {
             if ($scope.auth.id && $scope.auth.requestId && $scope.auth.username) {
                 $http({

@@ -49,7 +49,7 @@
 
                 <div ng-if="auth.request.status == 'TOKEN_GENERATED'" style="margin: 0 auto; width: 200px">
                     <form>
-                        <input class="form-control" placeholder="Authentication Code" type="number" minlength="6" maxlength="6" required ng-model="auth.enteredToken">
+                        <input class="form-control" placeholder="Authentication Code" minlength="6" maxlength="6" required ng-model="auth.enteredToken">
                         <button type="submit" class="btn btn-success" ng-click="submitToken()">Authenticate</button>
                     </form>
                 </div>

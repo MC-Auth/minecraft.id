@@ -322,7 +322,7 @@
         }, 500);
 
         $scope.submitToken = function () {
-            if ($scope.auth.enteredToken.toString().length !== 6) {
+            if ($scope.auth.enteredToken.length !== 6) {
                 return;
             }
 

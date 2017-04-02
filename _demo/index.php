@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>MCAuth - Authenticate & Link Users to their Minecraft account</title>
-    <link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>
+    <link id="favicon" rel="shortcut icon" type="image/png" href="https://mcauth.ga/favicon.png"/>
 
     <meta name="description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
     <meta name="keywords" content="minecraft,authentication,link,login,register">
@@ -9,11 +9,11 @@
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Minecraft Authentication">
-    <meta property="og:image" content="">
+    <meta property="og:image" content="https://mcauth.ga/img/mcauth-256.png">
     <meta property="og:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
 
     <meta property="twitter:title" content="Minecraft Authentication">
-    <meta property="twitter:image" content="">
+    <meta property="twitter:image" content="https://mcauth.ga/img/mcauth-256.png">
     <meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
     <meta property="twitter:creator" content="@Inventivtalent">
     <meta property="twitter:card" content="summary">

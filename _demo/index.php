@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>MCAuth - Authenticate & Link Users to their Minecraft account</title>
-    <link id="favicon" rel="shortcut icon" type="image/png" href="https://mcauth.ga/favicon.png"/>
+    <link id="favicon" rel="shortcut icon" type="image/png" href="https://mcauth.org/favicon.png"/>
 
     <meta name="description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
     <meta name="keywords" content="minecraft,authentication,link,login,register">
@@ -9,18 +9,18 @@
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Minecraft Authentication">
-    <meta property="og:image" content="https://mcauth.ga/img/mcauth-256.png">
+    <meta property="og:image" content="https://mcauth.org/img/mcauth-256.png">
     <meta property="og:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
 
     <meta property="twitter:title" content="Minecraft Authentication">
-    <meta property="twitter:image" content="https://mcauth.ga/img/mcauth-256.png">
+    <meta property="twitter:image" content="https://mcauth.org/img/mcauth-256.png">
     <meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
     <meta property="twitter:creator" content="@Inventivtalent">
     <meta property="twitter:card" content="summary">
 
     <meta name="robots" content="index, follow">
 
-    <link href="https://mcauth.ga/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://mcauth.org/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 </head>
 
@@ -48,9 +48,9 @@
             "code" => $_GET["code"]
         );
 
-        $ch = curl_init("http://api.mcauth.ga/auth/status/" . $_GET["id"]);
+        $ch = curl_init("https://api.mcauth.org/auth/status/" . $_GET["id"]);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -94,9 +94,9 @@
             "username" => $_POST["username"]
         );
 
-        $ch = curl_init("http://api.mcauth.ga/auth/start");
+        $ch = curl_init("https://api.mcauth.org/auth/start");
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -107,7 +107,7 @@
         $json = json_decode($result, true);
         curl_close($ch);
 
-        $redirectUrl = "https://api.mcauth.ga/auth/authorize/" . $json["id"] . "?request_id=" . $_POST["request_id"] . "&username=" . $_POST["username"] . "&style=" . $_POST["style"];
+        $redirectUrl = "https://api.mcauth.org/auth/authorize/" . $json["id"] . "?request_id=" . $_POST["request_id"] . "&username=" . $_POST["username"] . "&style=" . $_POST["style"];
 
         ?>
         Start result:
@@ -120,7 +120,7 @@
         <?php
         if (!isset($json["error"])) {
             ?>
-            <a class="btn btn-primary" href="<?php echo $redirectUrl; ?>" target="_parent">Continue authentication on mcauth.ga &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+            <a class="btn btn-primary" href="<?php echo $redirectUrl; ?>" target="_parent">Continue authentication on mcauth.org &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
             <?php
         } else {
             ?>
@@ -178,7 +178,7 @@
                         <br/>
                         <div class="form-group">
                             <label for="url">request_callback</label>
-                            <input type="url" name="request_callback" class="form-control" readonly value="https://mcauth.ga/_demo/return.php">
+                            <input type="url" name="request_callback" class="form-control" readonly value="https://mcauth.org/_demo/return.php">
                         </div>
                         <div class="form-group">
                             <label for="ip">request_ip</label>

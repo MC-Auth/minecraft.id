@@ -12,12 +12,12 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Minecraft Authentication">
     <update-meta property="og:title" content="{{head.seoTitle}}"></update-meta>
-    <meta property="og:image" content="https://mcauth.ga/img/mcauth-256.png">
+    <meta property="og:image" content="https://mcauth.org/img/mcauth-256.png">
     <meta property="og:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
 
     <meta property="twitter:title" content="Minecraft Authentication">
     <update-meta property="twitter:title" content="{{head.seoTitle}}"></update-meta>
-    <meta property="twitter:image" content="https://mcauth.ga/img/mcauth-256.png">
+    <meta property="twitter:image" content="https://mcauth.org/img/mcauth-256.png">
     <meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
     <meta property="twitter:creator" content="@Inventivtalent">
     <meta property="twitter:card" content="summary">
@@ -66,7 +66,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-2">
-                    <a href="https://mcauth.ga"><img src="/img/mcauth-256.png" class="img-responsive" onclick="window.location='/'"></a>
+                    <a href="https://mcauth.org"><img src="/img/mcauth-256.png" class="img-responsive" onclick="window.location='/'"></a>
                 </div>
                 <div class="col-md-10">
                     <h1 onclick="window.location='/'">Minecraft Authentication</h1>
@@ -85,7 +85,7 @@
     <div class="container" style="padding-bottom: 100px;">
         <div ng-view></div>
         <div ng-show="auth.isUserOnAuthPage() && auth.style === 'simple'">
-            <span class="text-muted">Powered by <a href="https://mcauth.ga" target="_blank">MCAuth</a></span>
+            <span class="text-muted">Powered by <a href="https://mcauth.org" target="_blank">MCAuth</a></span>
         </div>
     </div>
 </div>
@@ -197,7 +197,7 @@
                 return $location.path() === "/auth";
             },
             goToAuthPage: function () {
-                window.location = 'https://api.mcauth.ga/auth/authorize/' + $scope.auth.getId() + '?request_id=' + $scope.auth.getRequestId() + '&username=' + $scope.auth.getUsername() + '&style=default';
+                window.location = 'https://api.mcauth.org/auth/authorize/' + $scope.auth.getId() + '?request_id=' + $scope.auth.getRequestId() + '&username=' + $scope.auth.getUsername() + '&style=default';
             },
             request: {
                 status: "STARTED",
@@ -214,7 +214,7 @@
 
         if (!$scope.auth.isUserOnAuthPage() && $scope.auth.id) {
             $http({
-                url: "https://api.mcauth.ga/auth/api/check/" + $scope.auth.getId()
+                url: "https://api.mcauth.org/auth/api/check/" + $scope.auth.getId()
             }).then(function (response) {
                 console.log(response);
                 $scope.auth.request.status = response.data.status;
@@ -224,7 +224,7 @@
                 if ($scope.auth.request.status === "REQUESTED") {
                     var iframe = $("#authModalIframe");
                     var modal = $("#authModal");
-                    iframe.attr("src", "https://api.mcauth.ga/auth/authorize/" + $scope.auth.getId() + "?request_id=" + $scope.auth.getRequestId() + "&username=" + $scope.auth.getUsername() + "&style=simple");
+                    iframe.attr("src", "https://api.mcauth.org/auth/authorize/" + $scope.auth.getId() + "?request_id=" + $scope.auth.getRequestId() + "&username=" + $scope.auth.getUsername() + "&style=simple");
                     iframe.on("load", function () {
                         var iframeResizeInterval = $interval(function () {
                             if (iframe.attr("src").length == 0) {
@@ -259,7 +259,7 @@
 
         $scope.refreshStatus = function () {
             $http({
-                url: "https://api.mcauth.ga/auth/api/check/" + $scope.auth.getId()
+                url: "https://api.mcauth.org/auth/api/check/" + $scope.auth.getId()
             }).then(function (response) {
                 console.log(response);
                 $scope.auth.request.status = response.data.status;
@@ -267,7 +267,7 @@
 
                 if ($scope.auth.request.status === 'TIMEOUT_LOGIN' || $scope.auth.request.status === 'TIMEOUT_TOKEN' || $scope.auth.request.status === 'VERIFIED' || $scope.auth.request.status === 'INVALID_TOKEN' || $scope.auth.request.status === 'FAILED') {
                     $timeout(function () {
-                        window.location = "https://api.mcauth.ga/auth/finish/" + $scope.auth.getId()
+                        window.location = "https://api.mcauth.org/auth/finish/" + $scope.auth.getId()
                     }, 2000);
                     $interval.cancel($scope.auth.checkInterval);
                     $interval.cancel($scope.auth.timerInterval);
@@ -283,7 +283,7 @@
         $timeout(function () {
             if ($scope.auth.id && $scope.auth.requestId && $scope.auth.username) {
                 $http({
-                    url: "https://api.mcauth.ga/auth/api/check/" + $scope.auth.getId()
+                    url: "https://api.mcauth.org/auth/api/check/" + $scope.auth.getId()
                 }).then(function (response) {
                     console.log(response);
                     $scope.auth.request.status = response.data.status;
@@ -299,7 +299,7 @@
                         $interval.cancel($scope.auth.timerInterval);
                     }
                     $scope.auth.timerInterval = $interval(function () {
-                        $scope.auth.expiration.duration = moment.duration(moment($scope.auth.request.created * 1000).add(5, "minutes") - moment());
+                        $scope.auth.expiration.duration = moment.duration(moment($scope.auth.request.created).add(5, "minutes") - moment());
                         $scope.auth.expiration.durationText = moment($scope.auth.expiration.duration.asMilliseconds()).format("mm:ss");
 
                         if ($scope.auth.request.status === "STARTED" || $scope.auth.request.status === "REQUESTED") {
@@ -329,7 +329,7 @@
             }
 
             $http({
-                url: "https://api.mcauth.ga/auth/api/verify/" + $scope.auth.getId() + "?token=" + $scope.auth.enteredToken,
+                url: "https://api.mcauth.org/auth/api/verify/" + $scope.auth.getId() + "?token=" + $scope.auth.enteredToken,
             }).then(function (response) {
                 console.log(response);
                 $timeout(function () {
@@ -348,14 +348,14 @@
 //        console.log($location.path())
 //        console.log($routeParams);
 //        console.log($routeParams.returnValues)
-        $scope.iframeSrc = "https://mcauth.ga/_demo/index.php";
+        $scope.iframeSrc = "https://mcauth.org/_demo/index.php";
         if ($routeParams.returnValues) {
             var split = $routeParams.returnValues.split(",");
             var id = split[0];
             var requestId = split[1];
             var code = split[2];
 
-            $scope.iframeSrc = "https://mcauth.ga/_demo/index.php?id=" + id + "&request_id=" + requestId + "&code=" + code;
+            $scope.iframeSrc = "https://mcauth.org/_demo/index.php?id=" + id + "&request_id=" + requestId + "&code=" + code;
         }
     }]);
 

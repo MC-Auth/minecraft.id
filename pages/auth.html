@@ -39,7 +39,7 @@
                 <span ng-if="auth.request.status == 'STARTED'">Loading...</span>
                 <span ng-if="auth.request.status == 'NOT_FOUND'">Invalid Request / Not Found</span>
 
-                <span ng-if="auth.request.status == 'REQUESTED'">Please join <strong>mc.mcauth.ga</strong> with your Minecraft client</span>
+                <span ng-if="auth.request.status == 'REQUESTED'">Please join <strong>mc.mcauth.org</strong> with your Minecraft client</span>
                 <span ng-if="auth.request.status == 'TOKEN_GENERATED'">Please enter the token below</span>
 
                 <span ng-if="(auth.request.status == 'REQUESTED' || auth.request.status == 'TOKEN_GENERATED') && auth.expiration.duration > 0"><br/>Request expires in <span ng-class="{'countdown-warning':auth.expiration.duration.asSeconds()<=60,'countdown-danger':auth.expiration.duration.asSeconds()<=30}">{{auth.expiration.durationText}}</span></span>

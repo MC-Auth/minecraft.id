@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://mcauth.ga</loc>
+        <loc>https://mcauth.org</loc>
     </url>
     <url>
-        <loc>https://mcauth.ga/howto</loc>
+        <loc>https://mcauth.org/howto</loc>
     </url>
     <url>
-        <loc>https://mcauth.ga/demo</loc>
+        <loc>https://mcauth.org/demo</loc>
     </url>
     <url>
-        <loc>https://mcauth.ga/documentation</loc>
+        <loc>https://mcauth.org/documentation</loc>
     </url>
 </urlset>

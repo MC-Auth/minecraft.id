@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html ng-app="mcauthApp" ng-controller="mcauthController">
 <head>
-    <title ng-bind="head.pageTitle">MCAuth - Authenticate & Link Users to their Minecraft account</title>
+    <title ng-bind="head.pageTitle">MinecraftID - Authenticate & Link Users to their Minecraft account</title>
     <update-title content="{{head.pageTitle}}"></update-title>
     <link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>
 
-    <meta name="description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+    <meta name="description" content="MinecraftID allows players to link their Minecraft account to websites, apps, etc.">
     <meta name="keywords" content="minecraft,authentication,link,login,register">
     <meta name="author" content="inventivetalent">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Minecraft Authentication">
     <update-meta property="og:title" content="{{head.seoTitle}}"></update-meta>
-    <meta property="og:image" content="https://mcauth.org/img/mcauth-256.png">
-    <meta property="og:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+    <meta property="og:image" content="https://minecraft.id/img/mcauth-256.png">
+    <meta property="og:description" content="MinecraftID allows players to link their Minecraft account to websites, apps, etc.">
 
     <meta property="twitter:title" content="Minecraft Authentication">
     <update-meta property="twitter:title" content="{{head.seoTitle}}"></update-meta>
-    <meta property="twitter:image" content="https://mcauth.org/img/mcauth-256.png">
-    <meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+    <meta property="twitter:image" content="https://minecraft.id/img/mcauth-256.png">
+    <meta property="twitter:description" content="MinecraftID allows players to link their Minecraft account to websites, apps, etc.">
     <meta property="twitter:creator" content="@Inventivtalent">
     <meta property="twitter:card" content="summary">
 
@@ -66,7 +66,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-2">
-                    <a href="https://mcauth.org"><img src="/img/mcauth-256.png" class="img-responsive" onclick="window.location='/'"></a>
+                    <a href="https://minecraft.id"><img src="/img/mcauth-256.png" class="img-responsive" onclick="window.location='/'"></a>
                 </div>
                 <div class="col-md-10">
                     <h1 onclick="window.location='/'">Minecraft Authentication</h1>
@@ -85,7 +85,7 @@
     <div class="container" style="padding-bottom: 100px;">
         <div ng-view></div>
         <div ng-show="auth.isUserOnAuthPage() && auth.style === 'simple'">
-            <span class="text-muted">Powered by <a href="https://mcauth.org" target="_blank">MCAuth</a></span>
+            <span class="text-muted">Powered by <a href="https://minecraft.id" target="_blank">MinecraftID</a></span>
         </div>
     </div>
 </div>
@@ -181,7 +181,7 @@
         console.log($location.path())
 
         $scope.head = {
-            pageTitle: "MCAuth - Authenticate & Link Users to their Minecraft account",
+            pageTitle: "MinecraftID - Authenticate & Link Users to their Minecraft account",
             seoTitle: "Minecraft Authentication"
         };
 
@@ -203,7 +203,7 @@
                 return $location.path() === "/auth";
             },
             goToAuthPage: function () {
-                window.location = 'https://api.mcauth.org/auth/authorize/' + $scope.auth.getId() + '?request_id=' + $scope.auth.getRequestId() + '&username=' + $scope.auth.getUsername() + '&style=default';
+                window.location = 'https://api.minecraft.id/auth/authorize/' + $scope.auth.getId() + '?request_id=' + $scope.auth.getRequestId() + '&username=' + $scope.auth.getUsername() + '&style=default';
             },
             request: {
                 status: "STARTED",
@@ -220,7 +220,7 @@
 
         if (!$scope.auth.isUserOnAuthPage() && $scope.auth.id) {
             $http({
-                url: "https://api.mcauth.org/auth/api/check/" + $scope.auth.getId()
+                url: "https://api.minecraft.id/auth/api/check/" + $scope.auth.getId()
             }).then(function (response) {
                 console.log(response);
                 $scope.auth.request.status = response.data.status;
@@ -230,7 +230,7 @@
                 if ($scope.auth.request.status === "REQUESTED") {
                     var iframe = $("#authModalIframe");
                     var modal = $("#authModal");
-                    iframe.attr("src", "https://api.mcauth.org/auth/authorize/" + $scope.auth.getId() + "?request_id=" + $scope.auth.getRequestId() + "&username=" + $scope.auth.getUsername() + "&style=simple");
+                    iframe.attr("src", "https://api.minecraft.id/auth/authorize/" + $scope.auth.getId() + "?request_id=" + $scope.auth.getRequestId() + "&username=" + $scope.auth.getUsername() + "&style=simple");
                     iframe.on("load", function () {
                         var iframeResizeInterval = $interval(function () {
                             if (iframe.attr("src").length == 0) {
@@ -256,8 +256,8 @@
     }]);
 
     authApp.controller("authController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
-        $scope.head.pageTitle = "Authentication - MCAuth";
-        $scope.head.seoTitle = "Authentication - MCAuth";
+        $scope.head.pageTitle = "Authentication - MinecraftID";
+        $scope.head.seoTitle = "Authentication - MinecraftID";
 
 
         console.info("authController");
@@ -265,7 +265,7 @@
 
         $scope.refreshStatus = function () {
             $http({
-                url: "https://api.mcauth.org/auth/api/check/" + $scope.auth.getId()
+                url: "https://api.minecraft.id/auth/api/check/" + $scope.auth.getId()
             }).then(function (response) {
                 console.log(response);
                 $scope.auth.request.status = response.data.status;
@@ -273,7 +273,7 @@
 
                 if ($scope.auth.request.status === 'TIMEOUT_LOGIN' || $scope.auth.request.status === 'TIMEOUT_TOKEN' || $scope.auth.request.status === 'VERIFIED' || $scope.auth.request.status === 'INVALID_TOKEN' || $scope.auth.request.status === 'FAILED') {
                     $timeout(function () {
-                        window.location = "https://api.mcauth.org/auth/finish/" + $scope.auth.getId()
+                        window.location = "https://api.minecraft.id/auth/finish/" + $scope.auth.getId()
                     }, 2000);
                     $interval.cancel($scope.auth.checkInterval);
                     $interval.cancel($scope.auth.timerInterval);
@@ -289,7 +289,7 @@
         $timeout(function () {
             if ($scope.auth.id && $scope.auth.requestId && $scope.auth.username) {
                 $http({
-                    url: "https://api.mcauth.org/auth/api/check/" + $scope.auth.getId()
+                    url: "https://api.minecraft.id/auth/api/check/" + $scope.auth.getId()
                 }).then(function (response) {
                     console.log(response);
                     $scope.auth.request.status = response.data.status;
@@ -309,13 +309,13 @@
                         $scope.auth.expiration.durationText = moment($scope.auth.expiration.duration.asMilliseconds()).format("mm:ss");
 
                         if ($scope.auth.request.status === "STARTED" || $scope.auth.request.status === "REQUESTED") {
-                            $scope.head.pageTitle = "Join Minecraft | " + $scope.auth.expiration.durationText + " | Authentication - MCAuth";
+                            $scope.head.pageTitle = "Join Minecraft | " + $scope.auth.expiration.durationText + " | Authentication - MinecraftID";
                         } else if ($scope.auth.request.status === "TOKEN_GENERATED") {
-                            $scope.head.pageTitle = "Enter Token | " + $scope.auth.expiration.durationText + " | Authentication - MCAuth";
+                            $scope.head.pageTitle = "Enter Token | " + $scope.auth.expiration.durationText + " | Authentication - MinecraftID";
                         } else if ($scope.auth.request.status === "VERIFIED" || $scope.auth.request.status === "INVALID_TOKEN") {
-                            $scope.head.pageTitle = "Redirecting... | Authentication - MCAuth";
+                            $scope.head.pageTitle = "Redirecting... | Authentication - MinecraftID";
                         } else {
-                            $scope.head.pageTitle = "Authentication - MCAuth";
+                            $scope.head.pageTitle = "Authentication - MinecraftID";
                         }
                     }, 1000);
                 }, function (error) {
@@ -335,7 +335,7 @@
             }
 
             $http({
-                url: "https://api.mcauth.org/auth/api/verify/" + $scope.auth.getId() + "?token=" + $scope.auth.enteredToken,
+                url: "https://api.minecraft.id/auth/api/verify/" + $scope.auth.getId() + "?token=" + $scope.auth.enteredToken,
             }).then(function (response) {
                 console.log(response);
                 $timeout(function () {
@@ -347,32 +347,32 @@
     }]);
 
     authApp.controller("demoController", ["$scope", "$routeParams", "$location", function ($scope, $routeParams, $location) {
-        $scope.head.pageTitle = "Demo - MCAuth";
-        $scope.head.seoTitle = "Demo - MCAuth";
+        $scope.head.pageTitle = "Demo - MinecraftID";
+        $scope.head.seoTitle = "Demo - MinecraftID";
 
         console.info("demoController");
 //        console.log($location.path())
 //        console.log($routeParams);
 //        console.log($routeParams.returnValues)
-        $scope.iframeSrc = "https://mcauth.org/_demo/index.php";
+        $scope.iframeSrc = "https://minecraft.id/_demo/index.php";
         if ($routeParams.returnValues) {
             var split = $routeParams.returnValues.split(",");
             var id = split[0];
             var requestId = split[1];
             var code = split[2];
 
-            $scope.iframeSrc = "https://mcauth.org/_demo/index.php?id=" + id + "&request_id=" + requestId + "&code=" + code;
+            $scope.iframeSrc = "https://minecraft.id/_demo/index.php?id=" + id + "&request_id=" + requestId + "&code=" + code;
         }
     }]);
 
     authApp.controller("howtoController", ["$scope", function ($scope) {
-        $scope.head.pageTitle = "How To - MCAuth";
-        $scope.head.seoTitle = "How To - MCAuth";
+        $scope.head.pageTitle = "How To - MinecraftID";
+        $scope.head.seoTitle = "How To - MinecraftID";
     }]);
 
     authApp.controller("documentationController", ["$scope", function ($scope) {
-        $scope.head.pageTitle = "Documentation - MCAuth";
-        $scope.head.seoTitle = "Documentation - MCAuth";
+        $scope.head.pageTitle = "Documentation - MinecraftID";
+        $scope.head.seoTitle = "Documentation - MinecraftID";
     }]);
 </script>
 </body>

@@ -1,26 +1,26 @@
 <html>
 <head>
-    <title>MCAuth - Authenticate & Link Users to their Minecraft account</title>
-    <link id="favicon" rel="shortcut icon" type="image/png" href="https://mcauth.org/favicon.png"/>
+    <title>MinecraftID - Authenticate & Link Users to their Minecraft account</title>
+    <link id="favicon" rel="shortcut icon" type="image/png" href="https://minecraft.id/favicon.png"/>
 
-    <meta name="description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+    <meta name="description" content="MinecraftID allows players to link their Minecraft account to websites, apps, etc.">
     <meta name="keywords" content="minecraft,authentication,link,login,register">
     <meta name="author" content="inventivetalent">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Minecraft Authentication">
-    <meta property="og:image" content="https://mcauth.org/img/mcauth-256.png">
-    <meta property="og:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+    <meta property="og:image" content="https://minecraft.id/img/mcauth-256.png">
+    <meta property="og:description" content="MinecraftID allows players to link their Minecraft account to websites, apps, etc.">
 
     <meta property="twitter:title" content="Minecraft Authentication">
-    <meta property="twitter:image" content="https://mcauth.org/img/mcauth-256.png">
-    <meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">
+    <meta property="twitter:image" content="https://minecraft.id/img/mcauth-256.png">
+    <meta property="twitter:description" content="MinecraftID allows players to link their Minecraft account to websites, apps, etc.">
     <meta property="twitter:creator" content="@Inventivtalent">
     <meta property="twitter:card" content="summary">
 
     <meta name="robots" content="index, follow">
 
-    <link href="https://mcauth.org/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://minecraft.id/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 </head>
 
@@ -48,7 +48,7 @@
             "code" => $_GET["code"]
         );
 
-        $ch = curl_init("https://api.mcauth.org/auth/status/" . $_GET["id"]);
+        $ch = curl_init("https://api.minecraft.id/auth/status/" . $_GET["id"]);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -94,7 +94,7 @@
             "username" => $_POST["username"]
         );
 
-        $ch = curl_init("https://api.mcauth.org/auth/start");
+        $ch = curl_init("https://api.minecraft.id/auth/start");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -107,7 +107,7 @@
         $json = json_decode($result, true);
         curl_close($ch);
 
-        $redirectUrl = "https://api.mcauth.org/auth/authorize/" . $json["id"] . "?request_id=" . $_POST["request_id"] . "&username=" . $_POST["username"] . "&style=" . $_POST["style"];
+        $redirectUrl = "https://api.minecraft.id/auth/authorize/" . $json["id"] . "?request_id=" . $_POST["request_id"] . "&username=" . $_POST["username"] . "&style=" . $_POST["style"];
 
         ?>
         Start result:
@@ -120,7 +120,7 @@
         <?php
         if (!isset($json["error"])) {
             ?>
-            <a class="btn btn-primary" href="<?php echo $redirectUrl; ?>" target="_parent">Continue authentication on mcauth.org &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+            <a class="btn btn-primary" href="<?php echo $redirectUrl; ?>" target="_parent">Continue authentication on minecraft.id &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
             <?php
         } else {
             ?>
@@ -178,12 +178,12 @@
                         <br/>
                         <div class="form-group">
                             <label for="url">request_callback</label>
-                            <input type="url" name="request_callback" class="form-control" readonly value="https://mcauth.org/_demo/return.php">
+                            <input type="url" name="request_callback" class="form-control" readonly value="https://minecraft.id/_demo/return.php">
                         </div>
                         <div class="form-group">
                             <label for="ip">request_ip</label>
                             <input type="text" name="request_ip" class="form-control" readonly value="<?php echo getIp(); ?>"
-                            <small class="form-text"><strong>Note: </strong>MCAuth relies on the requesting IP to be the same for every step, including the connection to the Minecraft server</small>
+                            <small class="form-text"><strong>Note: </strong>MinecraftID relies on the requesting IP to be the same for every step, including the connection to the Minecraft server</small>
                         </div>
                     </fieldset>
                 </div>

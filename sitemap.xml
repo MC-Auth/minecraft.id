@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://mcauth.org</loc>
+        <loc>https://minecraft.id</loc>
     </url>
     <url>
-        <loc>https://mcauth.org/howto</loc>
+        <loc>https://minecraft.id/howto</loc>
     </url>
     <url>
-        <loc>https://mcauth.org/demo</loc>
+        <loc>https://minecraft.id/demo</loc>
     </url>
     <url>
-        <loc>https://mcauth.org/documentation</loc>
+        <loc>https://minecraft.id/documentation</loc>
     </url>
 </urlset>
